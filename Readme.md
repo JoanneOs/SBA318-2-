@@ -61,3 +61,7 @@ Step 7: Use middleware
 8- routes
 
 Step 9: Catch errors
+
+-----
+
+added function to middleware/logger.js
