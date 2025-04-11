@@ -12,5 +12,13 @@ router.post('/', (req, res) => {
   res.send("Creating a new user");
 });
 
+
+//by :id
+// by :id
+router.get('/:id', (req, res) => {
+    res.send(`Get fruit with the ID of ${req.params.id}`);
+});
+
+
 // Export the router to use in app.js
 module.exports = router;
