@@ -67,3 +67,10 @@ Step 9: Catch errors
 added function to middleware/logger.js
 same to middleware/checkUser.js
 
+-------
+
+added more to have access by Id:
+but those pages empty, html can be added in side router call
+but to organize will do 2 ejs in views folder: 
+commentDetails.ejs
+userDetails.ejs
