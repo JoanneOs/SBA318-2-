@@ -30,5 +30,14 @@ Created new repo SBA318-2
 
 git remote add origin https://github.com/JoanneOs/SBA318-2.git
 
+git add .
+git commit -m "my 3rd SBA practice"
+git branch -M main
+git push -u origin main
 
+******************************************
 
+created app.js  going there and explaing my steps in there
+
+for each step will do:
+git add . && git commit -m "my work" && git push origin main
