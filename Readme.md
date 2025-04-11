@@ -56,3 +56,6 @@ html in home.ejs
 
 
 5- style.css
+Step 6: Parse JSON and form data
+Step 7: Use middleware
+8- routes

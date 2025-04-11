@@ -8,6 +8,12 @@ const logger = require("./middleware/logger");
 const checkUser = require("./middleware/checkUser");
 
 
+//routs const
+const userRoutes = require("./routes/users");
+const postRoutes = require("./routes/posts");
+const commentRoutes = require("./routes/comments");
+
+
 //telling  my browser where to view
 const path = require("path");
 app.set("views", path.join(__dirname, "views"));
@@ -24,6 +30,11 @@ app.use(express.urlencoded({ extended: true })); // for form submissions
 //using middleware
 app.use(logger); // for all routes
 app.use("/users", checkUser); // only for user routes
+
+//using routes
+app.use("/users", checkUser, userRoutes);
+app.use("/posts", postRoutes);
+app.use("/comments", commentRoutes);
 
 
 
