@@ -52,6 +52,15 @@ app.get("/", (req, res) => {
     res.send("Welcome to my RESTful API");
   });
   
+
+///catching error here at botom befor listen
+
+app.use((err, req, res, next) => {
+    console.error("Error caught by error-handling middleware:", err.message);
+    res.status(500).json({ error: "Internal Server Error" });
+  });
+  
+
 app.listen(3000, () => {
     console.log("Server running on http://localhost:3000");
   });

@@ -59,3 +59,5 @@ html in home.ejs
 Step 6: Parse JSON and form data
 Step 7: Use middleware
 8- routes
+
+Step 9: Catch errors
