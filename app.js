@@ -9,6 +9,10 @@ app.set("views", path.join(__dirname, "views"));
 
 app.set("view engine", "ejs"); //setting view engine
 
+app.use(express.static("public"));
+
+
+
 //changing home view:  
    app.get("/", (req, res) => {
   res.render("home"); // looks for views/home.ejs  //going to home.ejs 

@@ -47,8 +47,12 @@ Step 2: Tell it to listen for incoming requests
 runing: 
 npx nodemon app.js
 checking: http://localhost:3000 (see anything yet, but the server is alive!)
-Add a route so the browser sees something
+3-Add a route so the browser sees something
 refreshed the browser — boom! i see my message.
 
 
+Step 4: Use EJS to render a proper HTML page
+html in home.ejs
 
+
+5- style.css
