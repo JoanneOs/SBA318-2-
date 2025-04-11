@@ -15,9 +15,14 @@ router.post('/', (req, res) => {
 
 //by :id
 // by :id
+// router.get('/:id', (req, res) => {
+//     res.send(`Get fruit with the ID of ${req.params.id}`);
+// });
 router.get('/:id', (req, res) => {
-    res.send(`Get fruit with the ID of ${req.params.id}`);
+    const userId = req.params.id;
+    res.render('userDetails', { userId }); // Rendering userDetails.ejs with userId
 });
+
 
 
 // Export the router to use in app.js

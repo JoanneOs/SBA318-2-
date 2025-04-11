@@ -14,9 +14,14 @@ router.post('/', (req, res) => {
 
 //adding here route by Id:
 
+// router.get('/:id', (req, res) => {
+//     res.send(`Get Comments with the ID of ${req.params.id}`)
+//   })
+
 router.get('/:id', (req, res) => {
-    res.send(`Get Comments with the ID of ${req.params.id}`)
-  })
+    const commentId = req.params.id;
+    res.render('commentDetails', { commentId });
+});
 
 // Export the router to use in app.js
 module.exports = router;
