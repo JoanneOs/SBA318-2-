@@ -1,7 +1,6 @@
 function checkUser(req, res, next) {
-    // Example check - feel free to customize this
-    console.log("Checking user...");
-    next();
+    console.log("User is being checked");
+    next(); // Ensure this is present to pass control to the next middleware/route
   }
   
-  module.exports = checkUser;
+  module.exports = checkUser; 

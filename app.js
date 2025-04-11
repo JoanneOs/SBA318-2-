@@ -1,67 +1,51 @@
+const express = require("express"); // Import express to use it
+const app = express(); // Create an instance of the express app
 
-
-const express = require("express"); // bring in express so we can use it
-const app = express(); // this creates our express application
-
-//adding middleware const
+// Import middleware
 const logger = require("./middleware/logger");
 const checkUser = require("./middleware/checkUser");
 
-
-//routs const
+// Import route files
 const userRoutes = require("./routes/users");
 const postRoutes = require("./routes/posts");
 const commentRoutes = require("./routes/comments");
 
-
-//telling  my browser where to view
+// Path module to configure the view engine location
 const path = require("path");
-app.set("views", path.join(__dirname, "views"));
+app.set("views", path.join(__dirname, "views")); // Set views directory for ejs
 
-app.set("view engine", "ejs"); //setting view engine
+// Set EJS as the view engine
+app.set("view engine", "ejs");
 
+// Serve static files like CSS from the "public" directory
 app.use(express.static("public"));
 
+// Middleware for parsing incoming JSON data
+app.use(express.json());
+app.use(express.urlencoded({ extended: true })); // Middleware to parse form data
 
+// Use logger middleware for all routes
+app.use(logger);
 
-app.use(express.json()); // for JSON requests
-app.use(express.urlencoded({ extended: true })); // for form submissions
-
-//using middleware
-app.use(logger); // for all routes
-app.use("/users", checkUser); // only for user routes
-
-//using routes
+// Use checkUser middleware only for /users routes
 app.use("/users", checkUser, userRoutes);
+
+// Define routes for posts and comments
 app.use("/posts", postRoutes);
 app.use("/comments", commentRoutes);
 
-
-
-//changing home view:  
-   app.get("/", (req, res) => {
-  res.render("home"); // looks for views/home.ejs  //going to home.ejs 
+// Home route, renders home.ejs
+app.get("/", (req, res) => {
+  res.render("home"); // This will render the "home" view from views/home.ejs
 });
 
-
-
-
-
-
-app.get("/", (req, res) => {
-    res.send("Welcome to my RESTful API");
-  });
-  
-
-///catching error here at botom befor listen
-
+// Error-handling middleware: Catch any errors in routes and send response
 app.use((err, req, res, next) => {
-    console.error("Error caught by error-handling middleware:", err.message);
-    res.status(500).json({ error: "Internal Server Error" });
-  });
-  
+  console.error("Error caught by error-handling middleware:", err.message);
+  res.status(500).json({ error: "Internal Server Error" });
+});
 
+// Start the server on port 3000
 app.listen(3000, () => {
-    console.log("Server running on http://localhost:3000");
-  });
-  
+  console.log("Server running on http://localhost:3000");
+});
