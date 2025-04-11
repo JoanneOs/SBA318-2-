@@ -41,3 +41,11 @@ created app.js  going there and explaing my steps in there
 
 for each step will do:
 git add . && git commit -m "my work" && git push origin main
+
+Step 1: Create a basic Express app
+Step 2: Tell it to listen for incoming requests
+runing: 
+npx nodemon app.js
+checking: http://localhost:3000 (see anything yet, but the server is alive!)
+
+
