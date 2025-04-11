@@ -65,3 +65,5 @@ Step 9: Catch errors
 -----
 
 added function to middleware/logger.js
+same to middleware/checkUser.js
+
