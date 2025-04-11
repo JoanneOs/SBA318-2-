@@ -11,6 +11,8 @@ app.set("view engine", "ejs"); //setting view engine
 
 app.use(express.static("public"));
 
+app.use(express.json()); // for JSON requests
+app.use(express.urlencoded({ extended: true })); // for form submissions
 
 
 //changing home view:  
