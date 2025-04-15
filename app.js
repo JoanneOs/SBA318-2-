@@ -1,51 +1,155 @@
-const express = require("express"); // Import express to use it
-const app = express(); // Create an instance of the express app
+const express = require('express');
+const path = require('path');
+const app = express();
+require('dotenv').config();
 
-// Import middleware
-const logger = require("./middleware/logger");
-const checkUser = require("./middleware/checkUser");
+// Load data
+const tripsData = require('./data/Trips-3.json');
+const gasData = require('./data/gas.json');
 
-// Import route files
-const userRoutes = require("./routes/users");
-const postRoutes = require("./routes/posts");
-const commentRoutes = require("./routes/comments");
+// Set view engine
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
 
-// Path module to configure the view engine location
-const path = require("path");
-app.set("views", path.join(__dirname, "views")); // Set views directory for ejs
-
-// Set EJS as the view engine
-app.set("view engine", "ejs");
-
-// Serve static files like CSS from the "public" directory
-app.use(express.static("public"));
-
-// Middleware for parsing incoming JSON data
+// Middleware
+app.use(express.static('public'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: true })); // Middleware to parse form data
+app.use(express.urlencoded({ extended: true }));
 
-// Use logger middleware for all routes
-app.use(logger);
+// Helpers
+const helpers = {
+  parseCurrency: (amount) => {
+    if (typeof amount === 'number') return amount;
+    if (!amount) return 0;
+    return parseFloat(amount.toString().replace(/[^0-9.-]/g, '')) || 0;
+  },
+  formatCurrency: (amount) => {
+    const num = helpers.parseCurrency(amount);
+    return num.toLocaleString('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+  },
+  formatDate: (dateString) => {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    return isNaN(date) ? dateString : date.toLocaleDateString();
+  }
+};
 
-// Use checkUser middleware only for /users routes
-app.use("/users", checkUser, userRoutes);
+// Data processing functions
+function getDriverData(driverName) {
+  const normalizedDriverName = driverName.toLowerCase().trim();
 
-// Define routes for posts and comments
-app.use("/posts", postRoutes);
-app.use("/comments", commentRoutes);
+  // Get driver's trips
+  const trips = tripsData.filter(trip => {
+    const tripDriver = trip['Driver Name']?.toLowerCase().trim() || '';
+    return tripDriver === normalizedDriverName;
+  });
 
-// Home route, renders home.ejs
-app.get("/", (req, res) => {
-  res.render("home"); // This will render the "home" view from views/home.ejs
+  // Get gas expenses
+  const gasExpenses = gasData.filter(gas => {
+    const gasDriver = gas['Driver Name']?.toLowerCase().trim() || '';
+    return gasDriver === normalizedDriverName;
+  });
+
+  return { trips, gasExpenses };
+}
+
+function calculatePay(trips, gasExpenses, payType) {
+  const totalTripPay = trips.reduce((sum, trip) => {
+    return sum + helpers.parseCurrency(trip['Estimated Cost']);
+  }, 0);
+
+  const totalGasSpend = gasExpenses.reduce((sum, gas) => {
+    return sum + helpers.parseCurrency(gas['Amount']);
+  }, 0);
+
+  let finalPay = 0;
+  if (payType === 'companyDriver') {
+    finalPay = Math.max(0, (totalTripPay - totalGasSpend) / 2);
+  } else if (payType === 'truckOwnerDriver') {
+    finalPay = totalTripPay;
+  }
+
+  return { totalTripPay, totalGasSpend, finalPay };
+}
+
+// Routes
+app.get('/', (req, res) => {
+  const drivers = [
+    { name: 'Sophia', type: 'companyDriver' },
+    { name: 'Marcus', type: 'truckOwnerDriver' }
+  ];
+  
+  res.render('home', {
+    drivers,
+    results: null,
+    helpers
+  });
 });
 
-// Error-handling middleware: Catch any errors in routes and send response
+app.post('/calculate-pay', (req, res) => {
+  try {
+    const { driverName, payType } = req.body;
+    const drivers = [
+      { name: 'Sophia', type: 'companyDriver' },
+      { name: 'Marcus', type: 'truckOwnerDriver' }
+    ];
+    
+    const { trips, gasExpenses } = getDriverData(driverName);
+    const { totalTripPay, totalGasSpend, finalPay } = calculatePay(trips, gasExpenses, payType);
+
+    res.render('home', {
+      drivers,
+      results: {
+        driverName,
+        payType,
+        trips,
+        gasExpenses,
+        totalTripPay,
+        totalGasSpend,
+        finalPay
+      },
+      helpers
+    });
+  } catch (err) {
+    console.error('Calculation error:', err);
+    res.status(500).render('error', { 
+      message: 'Error calculating pay',
+      helpers
+    });
+  }
+});
+
+// View routes
+app.get('/trips', (req, res) => {
+  res.render('trips', { 
+    trips: tripsData,
+    helpers 
+  });
+});
+
+app.get('/gas', (req, res) => {
+  res.render('gas', { 
+    gasExpenses: gasData,
+    helpers 
+  });
+});
+
+// Error handling
 app.use((err, req, res, next) => {
-  console.error("Error caught by error-handling middleware:", err.message);
-  res.status(500).json({ error: "Internal Server Error" });
+  console.error('Server error:', err);
+  res.status(500).render('error', { 
+    message: 'Internal Server Error',
+    helpers
+  });
 });
 
-// Start the server on port 3000
-app.listen(3000, () => {
-  console.log("Server running on http://localhost:3000");
+// Start server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
 });

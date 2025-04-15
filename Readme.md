@@ -1,76 +1,82 @@
-in Terminal:
+copied project SBA318 and renameed it SBA318PAY
+no pushing to git hub, 
+converting data to json
+and trying to use real data here
 
- mkdir SBA318 
- cd SBA318
- npm init -y
-git init
+safely reuse your project folder for a second project:
 
-npm install express ejs fs-extra
-npm install --save-dev nodemon
+📂 Step 1: Copy Your Project Folder
 
-echo "node_modules/" >> .gitignore
-echo ".env" >> .gitignore
-echo "data/" >> .gitignore
+Right-click your project folder → Copy → Paste (rename it, e.g., Project2).
+⚠️ Step 2: Delete These Before Starting
 
------------------
+node_modules folder → Too big, may cause conflicts.
+.env file (if any) → Contains secrets from Project 1.
+.git folder (if using Git) → So you start fresh.
+📝 Step 3: Update package.json
 
-Projecy structure:  
+Open the file and change:
+json
+Copy
+"name": "project2",  // Rename this!
 
-mkdir public views routes middleware data
+saved real json in data folder
+import it to db.js
 
-touch public/styles.css
-touch views/home.ejs
-touch routes/users.js routes/posts.js routes/comments.js
-touch middleware/logger.js middleware/checkUser.js
-touch data/db.js
-touch app.js README.md
+Sync vs. Async
+Use require() for static data (loaded once at startup).
+Use fs.readFile() if the JSON changes frequently:
 
------------
-Created new repo SBA318-2
+converted CSV to JSON at https://www.convertcsv.com/csv-to-json.htm
 
-git remote add origin https://github.com/JoanneOs/SBA318-2.git
+saved file in data folder
 
-git add .
-git commit -m "my 3rd SBA practice"
-git branch -M main
-git push -u origin main
+I had small problem convertig these data becaue my mac would only allow me to open CSV file in Numbers app, and when i converted it it had some little snippet like: "[": "PK�����", maybe: means something went really wrong with the file — it looks like your JSON file might have accidentally been overwritten or corrupted with binary data, possibly from a .zip or .docx file.
+they way it solved, as soon downloaded, it converted with out opening it, then saved json to data folder.
 
-******************************************
-
-created app.js  going there and explaing my steps in there
-
-for each step will do:
-git add . && git commit -m "my work" && git push origin main
-
-Step 1: Create a basic Express app
-Step 2: Tell it to listen for incoming requests
-runing: 
-npx nodemon app.js
-checking: http://localhost:3000 (see anything yet, but the server is alive!)
-3-Add a route so the browser sees something
-refreshed the browser — boom! i see my message.
+now to use these json data , i will need to set up routs:
 
 
-Step 4: Use EJS to render a proper HTML page
-html in home.ejs
+I added some routes, for now posts.js is my trips route js
+
+then to display data will do in home ejs
+
+here is my project structure , added trips.js trips.ejs and some updates on styles.css and app.js
+
+SBA318PAY/
+├── data/
+│   ├── db.js
+│   ├── Trips-3.json          
+│
+├── middleware/
+│   ├── checkUser.js
+│   ├── logger.js
+│
+├── node_modules/
+│
+├── public/
+│   └── styles.css            
+├── routes/
+│   ├── comments.js
+│   ├── posts.js
+│   ├── users.js
+│   └── trips.js              
+│
+├── views/
+│   ├── commentDetails/
+│   ├── home.ejs
+│   ├── userDetails.ejs
+│   └── trips.ejs            
+│
+├── .gitignore
+├── app.js                   
+├── package-lock.json
+└── package.json
 
 
-5- style.css
-Step 6: Parse JSON and form data
-Step 7: Use middleware
-8- routes
+The issue is that your /trips route is sending JSON data instead of rendering the trips.ejs template. Here's why you're not seeing the HTML table 
 
-Step 9: Catch errors
-
------
-
-added function to middleware/logger.js
-same to middleware/checkUser.js
-
--------
-
-added more to have access by Id:
-but those pages empty, html can be added in side router call
-but to organize will do 2 ejs in views folder: 
-commentDetails.ejs
-userDetails.ejs
+i copied trips2.json and added to trips3.json
+now:  Load the Data in app.js
+Pass It to a New View
+views/gas.ejs

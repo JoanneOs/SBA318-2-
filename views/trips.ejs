@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trips - Driver Pay System</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="dashboard">
+        <header class="dashboard-header">
+            <h1><i class="icon-road"></i> Trip Records</h1>
+            <nav class="main-nav">
+                <a href="/" class="nav-link"><i class="icon-home"></i> Home</a>
+                <a href="/trips" class="nav-link active"><i class="icon-road"></i> Trips</a>
+                <a href="/gas" class="nav-link"><i class="icon-fuel"></i> Gas</a>
+            </nav>
+        </header>
+
+        <main class="dashboard-content">
+            <section class="card">
+                <div class="table-controls">
+                    <div class="search-box">
+                        <input type="text" placeholder="Search trips..." id="tripSearch">
+                        <button class="search-btn"><i class="icon-search"></i></button>
+                    </div>
+                </div>
+
+                <div class="scroll-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Trip ID</th>
+                                <th>Driver</th>
+                                <th>Route</th>
+                                <th>Distance</th>
+                                <th>Estimated Pay</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% trips.forEach(trip => { %>
+                                <tr>
+                                    <td><%= trip['Trip ID'] %></td>
+                                    <td><%= trip['Driver Name'] %></td>
+                                    <td><%= trip['Facility Sequence'] %></td>
+                                    <td><%= trip['Estimate Distance'] %> <%= trip['Unit'] %></td>
+                                    <td><%= helpers.formatCurrency(trip['Estimated Cost']) %></td>
+                                    <td><span class="status-badge <%= trip['Trip Stage'].toLowerCase() %>">
+                                        <%= trip['Trip Stage'] %>
+                                    </span></td>
+                                </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+</body>
+</html>
